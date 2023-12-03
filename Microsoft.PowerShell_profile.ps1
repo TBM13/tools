@@ -24,7 +24,7 @@ $PDL = $SHELLAPP.NameSpace('shell:Downloads').Self.Path
 #######################################################
 function base64decode { [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($args)) }
 function base64encode { [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($args)) }
-function dif { code --dif $args}
+function dif { code --diff $args}
 function gcd { git clone --depth=1 $args }
 function gcds { git clone --depth=1 --single-branch $args }
 function gcs { git clone --single-branch $args }

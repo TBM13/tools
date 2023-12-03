@@ -66,9 +66,13 @@ config_git() {
     # These two features slow down navigation on big Git repos, so disable them
     git config --global --add oh-my-zsh.hide-status 1
     git config --global --add oh-my-zsh.hide-dirty 1
+    sudo git config --global --add oh-my-zsh.hide-status 1
+    sudo git config --global --add oh-my-zsh.hide-dirty 1
 
     git config --global user.name "TBM13"
     git config --global user.email "32852493+TBM13@users.noreply.github.com"
+    sudo git config --global user.name "TBM13"
+    sudo git config --global user.email "32852493+TBM13@users.noreply.github.com"
 
     log_success "Done!"
 }
