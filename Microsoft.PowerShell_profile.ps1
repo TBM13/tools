@@ -15,9 +15,9 @@ $USL = "C:\USL"
 $TERMUX_HOME = "/data/data/com.termux/files/home"
 
 $SHELLAPP = New-Object -ComObject Shell.Application
-$PD = $SHELLAPP.NameSpace('shell:Desktop').Self.Path
-$PDOC = $SHELLAPP.NameSpace('shell:Personal').Self.Path
-$PDL = $SHELLAPP.NameSpace('shell:Downloads').Self.Path
+$DESKTOP = $DESK = $SHELLAPP.NameSpace('shell:Desktop').Self.Path
+$DOCUMENTS = $DOCS = $SHELLAPP.NameSpace('shell:Personal').Self.Path
+$DOWNLOADS = $DL = $SHELLAPP.NameSpace('shell:Downloads').Self.Path
 
 #######################################################
 # Aliases
@@ -45,11 +45,14 @@ function ColoredLogcat {
 		[Parameter(ValueFromRemainingArguments=$true, Position=0)][string[]]$extraArgs,
 		[Parameter(ValueFromPipeline=$true)][string]$pipe,
 		[Alias("f")][string]$file,
+		[Alias("fi")][string]$filter_file,
 		[Alias("v")][string]$format,
 		[Alias("p")][string]$priority,
 		[Alias("pi")][string]$p_id,
 		[Alias("t")][string]$tag,
-		[Alias("m")][string]$msg
+		[Alias("ts")][string]$tag_s,
+		[Alias("m")][string]$msg,
+		[Alias("ms")][string]$msg_s
 		)
 		
 	begin {	
@@ -57,18 +60,19 @@ function ColoredLogcat {
 			$extraArgs += "--file"
 			$extraArgs += $file
 		}
+		if ($filter_file -ne "") {
+		 	if (!(Test-Path -Path $filter_file)) {
+				Write-Host "Assuming filter file is in $USL\ColoredLogcat"
+		 		$filter_file = "$USL\ColoredLogcat\" + $filter_file
+		 	}
+
+			$extraArgs += "--filter-file"
+			$extraArgs += $filter_file
+		}
 		if ($format -ne "") {
 			$extraArgs += "--format"
 			$extraArgs += $format
 		}
-		# if ($ignoreFile -ne "") {
-		# 	if (!(Test-Path -Path $ignoreFile)) {
-		# 		$ignoreFile = "$USL\ColoredLogcat\" + $ignoreFile
-		# 	}
-
-		# 	$extraArgs += "--ignore-file"
-		# 	$extraArgs += $ignoreFile
-		# }
 		if ($priority -ne "") {
 			$extraArgs += "--priority"
 			$extraArgs += $priority
@@ -81,9 +85,17 @@ function ColoredLogcat {
 			$extraArgs += "--tag"
 			$extraArgs += $tag
 		}
+		if ($tag_s -ne "") {
+			$extraArgs += "--tag-s"
+			$extraArgs += $tag_s
+		}
 		if ($msg -ne "") {
 			$extraArgs += "--message"
 			$extraArgs += $msg
+		}
+		if ($msg_s -ne "") {
+			$extraArgs += "--message-s"
+			$extraArgs += $msg_s
 		}
 
 		$pipeStr = [System.Text.StringBuilder]""
