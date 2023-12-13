@@ -18,18 +18,27 @@ fi
 # If ~/bin directory exists, add it to PATH
 if [ ! -d "~/bin" ]; then
     PATH="$PATH:$HOME/bin"
+    # Add each subdirectory in ~/bin too
+    for d in ~/bin/*; do
+        if [ -d "$d" ]; then
+            PATH="$PATH:$d"
+        fi
+    done
 fi
 
 ##################################################
 # Variables
 ##################################################
-WIN_DRIVE="/mnt/c"
-USL="$WIN_DRIVE/USL"
+WINDRIVE="/mnt/c"
+USL="$WINDRIVE/USL"
 
-PHOME="$WIN_DRIVE/Users/mateo"
-PD="$PHOME/Desktop"
-PDOC="$PHOME/Documents"
-PDL="$PHOME/Downloads"
+WINHOME="$WINDRIVE/Users/mateo"
+DESKTOP="$WINHOME/Desktop"
+DESK="$DESKTOP"
+DOCUMENTS="$WINHOME/Documents"
+DOCS="$DOCUMENTS"
+DOWNLOADS="$WINHOME/Downloads"
+DL="$DOWNLOADS"
 
 ##################################################
 # Aliases
@@ -82,7 +91,7 @@ config_git() {
 ##################################################
 cmd() {
     command="$1"
-    working_dir=${2:-"$WIN_DRIVE/"}
+    working_dir=${2:-"$WINDRIVE/"}
     curr_path="$PWD"
 
     if [ ! -d "$working_dir" ]; then
