@@ -28,6 +28,8 @@ function dif { code --diff $args}
 function gcd { git clone --depth=1 $args }
 function gcds { git clone --depth=1 --single-branch $args }
 function gcs { git clone --single-branch $args }
+function ida32 { & "$Env:Programfiles\IDA\ida.exe" $args }
+function ida64 { & "$Env:Programfiles\IDA\ida64.exe" $args }
 function md5sum { Get-FileHash -Algorithm md5 $args }
 function rkunpack { RockchipUnpackImage $args }
 
@@ -38,6 +40,33 @@ function Notepad([Parameter(Mandatory=$false)][string]$file)
 {
     $exe = $Env:Programfiles + "\Notepad++\notepad++.exe"
 	& $exe $file
+}
+
+function Vmware()
+{
+	$services = @(
+		"VMAuthdService", "VMnetDHCP", "VMUSBArbService", "VMware NAT Service", "VmwareAutostartService"
+	)
+
+	Write-Host "Starting VMware services..."
+	foreach ($svc in $services) {
+		Set-Service "$svc" -StartupType Manual
+		Start-Service "$svc"
+
+		if(!($?)) {
+			Write-Error "Failed to start $svc. Aborting..."
+			return
+		}
+	}
+
+	$exe = ${Env:ProgramFiles(x86)} + "\VMware\VMware Workstation\vmware.exe"
+	Start-Process $exe -Wait
+
+	Write-Host "Stopping VMware services..."
+	foreach ($svc in $services) {
+		Set-Service "$svc" -StartupType Disabled
+		Stop-Service "$svc"
+	}
 }
 
 function ColoredLogcat {
